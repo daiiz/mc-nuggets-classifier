@@ -46,3 +46,7 @@ div#crop {
   padding: 4px;
   border-radius: 0 4px 0 0;
 }
+
+canvas#out {
+  display: none;
+}

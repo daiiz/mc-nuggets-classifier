@@ -8,7 +8,6 @@ const loadModel = async () => {
 
 const main = async () => {
   if (!model) await loadModel()
-  const img1 = document.getElementById('pre-img')
   const img = await cropCanvas()
   // previewImage(await convertToBin(img.src))
   const { png, svg } = await extractContour(img.src)

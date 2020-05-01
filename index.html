@@ -8,14 +8,18 @@
     <!-- ref: https://cloud.google.com/vision/automl/object-detection/docs/tensorflow-js-tutorial -->
     <script src="https://unpkg.com/@tensorflow/tfjs"></script>
     <script src="https://unpkg.com/@tensorflow/tfjs-automl"></script>
+    <script src="./js/opencv.js"></script>
   </head>
   <body>
-    <img id='pre-img' src='./images/samples/b.jpg' />
     <canvas id='camera-canvas'></canvas>
+    <!-- OpenCVで使う -->
+    <canvas id='out'></canvas>
     <div id='crop'>
-      <div id='label'>BALL</div>
+      <div id='label'></div>
     </div>
     <script src='./js/utils.js'></script>
     <script src='./js/index.js'></script>
+    <!-- そのうちWebWorker化したいという想い -->
+    <script src='./js/worker.js'></script>
   </body>
 </html>

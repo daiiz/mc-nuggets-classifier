@@ -10,7 +10,10 @@ const main = async () => {
   if (!model) await loadModel()
   const img1 = document.getElementById('pre-img')
   const img = await cropCanvas()
-  previewImage(await convertToBin(img.src))
+  // previewImage(await convertToBin(img.src))
+  const { png, svg } = await extractContour(img.src)
+  previewImage(svg)
+
   // https://www.npmjs.com/package/@tensorflow/tfjs-automl#image-classification
   const predictions = await model.classify(img, { centerCrop: false })
   console.log(predictions)
@@ -111,4 +114,6 @@ window.addEventListener('load', async () => {
   renderCameraStream()
   await loadModel()
   // await convertToBin('./images/samples/a.jpg')
+  // const { png, svg } = await extractContour('./images/samples/a.jpg')
+  // previewImage(svg)
 })

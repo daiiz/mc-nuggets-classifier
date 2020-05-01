@@ -11,10 +11,6 @@ body {
   background-color: #666;
 }
 
-img {
-  display: none;
-}
-
 video {
   display: none;
 }
@@ -49,4 +45,10 @@ div#crop {
 
 canvas#out {
   display: none;
+}
+
+.forkme {
+  position: fixed;
+  top: 0;
+  right: 0;
 }

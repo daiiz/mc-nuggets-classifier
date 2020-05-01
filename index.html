@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
+    <meta charset='utf-8' />
     <title>Chicken nuggets</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <link rel='stylesheet' href="./css/index.css" />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=yes'>
+    <link rel='stylesheet' href='./css/index.css' />
     <!-- ref: https://cloud.google.com/vision/automl/object-detection/docs/tensorflow-js-tutorial -->
-    <script src="https://unpkg.com/@tensorflow/tfjs"></script>
-    <script src="https://unpkg.com/@tensorflow/tfjs-automl"></script>
-    <script src="./js/opencv.js"></script>
+    <script src='https://unpkg.com/@tensorflow/tfjs'></script>
+    <script src='https://unpkg.com/@tensorflow/tfjs-automl'></script>
+    <script src='./js/opencv.js'></script>
   </head>
   <body>
+    <a href='https://github.com/daiiz/mc-nuggets-classifier' class='forkme'>
+      <img width='149' height='149' src='https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149' class='attachment-full size-full' alt='Fork me on GitHub' data-recalc-dims='1'>
+    </a>
     <canvas id='camera-canvas'></canvas>
     <!-- OpenCVで使う -->
     <canvas id='out'></canvas>

@@ -10,7 +10,7 @@ const main = async () => {
   if (!model) await loadModel()
   const img1 = document.getElementById('pre-img')
   const img = await cropCanvas()
-  img1.src = img.src
+  previewImage(img.src)
   // https://www.npmjs.com/package/@tensorflow/tfjs-automl#image-classification
   const predictions = await model.classify(img, { centerCrop: false })
   console.log(predictions)
@@ -73,9 +73,8 @@ const renderCameraStream = () => {
 
 const updateCanvas = () => {
   if (!ctx || !video) return
-  // ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
   ctx.drawImage(video,
-    0, offset, videoWidth, videoWidth,
+    0, offset,   videoWidth,   videoWidth,
     0,      0, canvas.width, canvas.width
   )
   window.requestAnimationFrame(updateCanvas)
@@ -95,7 +94,6 @@ const cropCanvas = () => {
   return new Promise((resolve, reject) => {
     sourceImg.onload = () => {
       outCtx.drawImage(sourceImg, cropX, cropY, cropW, cropW, 0, 0, cropW, cropW)
-
       const outImg = document.createElement('img')
       outImg.src = out.toDataURL()
       outImg.onload = () => {

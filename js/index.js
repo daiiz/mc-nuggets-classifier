@@ -1,6 +1,6 @@
 let model = null
 const loadModel = async () => {
-  model = await tf.automl.loadImageClassification('/models/rgb/model.json')
+  model = await tf.automl.loadImageClassification('./models/rgb/model.json')
   console.log('model loaded:', model)
 }
 

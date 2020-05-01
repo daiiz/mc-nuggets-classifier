@@ -1,7 +1,9 @@
 let model = null
 const loadModel = async () => {
+  console.time('[model] loading')
   model = await tf.automl.loadImageClassification('./models/rgb/model.json')
-  console.log('model loaded:', model)
+  console.timeEnd('[model] loading')
+  console.log('[model]:', model)
 }
 
 const main = async () => {

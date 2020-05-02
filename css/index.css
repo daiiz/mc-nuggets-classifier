@@ -11,10 +11,6 @@ body {
   background-color: #666;
 }
 
-img {
-  display: none;
-}
-
 video {
   display: none;
 }
@@ -28,12 +24,13 @@ div#crop {
   left: calc(50vw - 150px);
   top: calc(50vh - 150px);
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .running {
   background-color: greenyellow;
   opacity: .4;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 #label {
@@ -49,4 +46,16 @@ div#crop {
 
 canvas#out {
   display: none;
+}
+
+.forkme {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+#model-selector-container {
+  position: absolute;
+  top: -35px;
+  left: -2px;
 }

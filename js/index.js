@@ -1,26 +1,65 @@
+
+const modelNames = [
+  'rgb',
+  'bin',
+  'contour'
+]
+
 let model = null
-const loadModel = async () => {
+const loadModel = async modelName => {
+  if (!modelName || !modelNames.includes(modelName)) {
+    return showLabel('Invalid modelName')
+  }
+  showLabel('Loading...')
   console.time('[model] loading')
-  model = await tf.automl.loadImageClassification('./models/rgb/model.json')
-  console.timeEnd('[model] loading')
-  console.log('[model]:', model)
+  model = null
+  try {
+    model = await tf.automl.loadImageClassification(`./automl-models/${modelName}/model.json`)
+    model.modelName = modelName
+    hideLabel()
+  } catch (err) {
+    console.error(err)
+    showLabel(`Failed to load: ${modelName}`)
+  } finally {
+    console.timeEnd('[model] loading')
+  }
+  console.log('[model]:', modelName, model)
 }
 
-const main = async () => {
-  if (!model) await loadModel()
-  const img = await cropCanvas()
-  // previewImage(await convertToBin(img.src))
-  const { png, svg } = await extractContour(img.src)
-  previewImage(svg)
-
-  // https://www.npmjs.com/package/@tensorflow/tfjs-automl#image-classification
-  const predictions = await model.classify(img, { centerCrop: false })
+const getMostLikelyItem = predictions => {
   console.log(predictions)
   let max = predictions[0]
   for (const pred of predictions) {
     if (pred.prob > max.prob) max = pred
   }
   return max
+}
+
+const predict = async (inputImg) => {
+  if (!model) return showLabel('The model is not ready.')
+
+  // モデルにあわせて入力画像を加工
+  switch (model.modelName) {
+    case 'rgb': {
+      previewImage(inputImg.src)
+      break
+    }
+    case 'bin': {
+      const dataUrl = await convertToBin(inputImg.src)
+      inputImg = await genImg(dataUrl)
+      previewImage(dataUrl)
+      break
+    }
+    case 'contour': {
+      const { dataUrl } = await extractContour(inputImg.src)
+      inputImg = await genImg(dataUrl.png)
+      previewImage(dataUrl.svg)
+      break
+    }
+  }
+  // https://www.npmjs.com/package/@tensorflow/tfjs-automl#image-classification
+  const predictions = await model.classify(inputImg, { centerCrop: false })
+  return getMostLikelyItem(predictions)
 }
 
 let ctx = null
@@ -36,15 +75,25 @@ const initCanvas = () => {
 
 const initCropper = () => {
   cropper = document.getElementById('crop')
-  const label = document.getElementById('label')
   cropper.addEventListener('click', async e => {
+    if (e.target.id.startsWith('model-selector')) return
     if (cropper.className) return
     cropper.className = 'running'
-    label.style.display = 'none'
-    const res = await main()
+    hideLabel()
+    const res = await predict(await cropCanvas())
     cropper.className = ''
-    label.innerText = `${res.label} ${Math.round(res.prob * 100) / 100}`
-    label.style.display = 'block'
+    showLabel(`${res.label} ${Math.round(res.prob * 100) / 100}`)
+  }, false)
+}
+
+const initModelSelector = () => {
+  const selector = document.getElementById('model-selector')
+  selector.addEventListener('change', async e => {
+    await loadModel(e.target.value)
+  }, false)
+  const randomImageButton = document.getElementById('model-selector-rand-image')
+  randomImageButton?.addEventListener('click', async e => {
+    await predictRandomImage()
   })
 }
 
@@ -107,12 +156,21 @@ const cropCanvas = () => {
 }
 
 window.addEventListener('load', async () => {
-  // console.log(tf)
   initCanvas()
   initCropper()
   renderCameraStream()
-  await loadModel()
-  // await convertToBin('./images/samples/a.jpg')
-  // const { png, svg } = await extractContour('./images/samples/a.jpg')
-  // previewImage(svg)
+  await loadModel(modelNames[0])
+  initModelSelector()
 })
+
+const predictRandomImage = async () => {
+  const arr = [
+    './images/samples/s0.jpg',
+    './images/samples/s1.jpg',
+    './images/samples/s2.jpg',
+    './images/samples/s3.jpg',
+  ]
+  const idx = Math.floor(Math.random() * arr.length)
+  const res = await predict(await genImg(arr[idx]))
+  showLabel(`${res.label} ${Math.round(res.prob * 100) / 100}`)
+}

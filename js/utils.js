@@ -1,7 +1,9 @@
+let previewTimer = null
 const previewImage = srcUrl => {
+  if (previewTimer) clearTimeout(previewTimer)
   const cropper = document.getElementById('crop')
   cropper.style.backgroundImage = `url(${srcUrl})`
-  window.setTimeout(() => {
+  previewTimer = setTimeout(() => {
     cropper.style.backgroundImage = ''
   }, 4000)
 }
@@ -17,4 +19,30 @@ const createSvg = (points, size=1000, lineColor='#000', bgColor='transparent') =
 
 const svgDataUrl = svgStr => {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgStr)}`
+}
+
+const genImg = srcUrl => {
+  const elem = document.createElement('img')
+  return new Promise((resolve, reject) => {
+    elem.src = srcUrl
+    elem.onload = () => resolve(elem)
+    elem.onerror = () => reject(elem)
+  })
+}
+
+const showLabel = text => {
+  const label = document.getElementById('label')
+  label.innerText = text
+  label.style.display = 'block'
+}
+
+const hideLabel = () => {
+  const label = document.getElementById('label')
+  label.style.display = 'none'
+}
+
+const delay = ms => {
+  return new Promise((resolve, reject) => {
+    window.setTimeout(() => { resolve(ms) }, ms)
+  })
 }

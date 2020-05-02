@@ -1,15 +1,6 @@
 // OpenCVを使う処理はここに書く
 // tools/crop.py を移植
 
-const genImg = srcUrl => {
-  const elem = document.createElement('img')
-  return new Promise((resolve, reject) => {
-    elem.src = srcUrl
-    elem.onload = () => resolve(elem)
-    elem.onerror = () => reject(elem)
-  })
-}
-
 const mat = (...args) => new cv.Mat(...args)
 
 // https://docs.opencv.org/3.4/db/d64/tutorial_js_colorspaces.html
@@ -115,7 +106,9 @@ const extractContour = async srcUrl => {
   ctx.drawImage(svgImg, 0, 0, 100, 100)
 
   return {
-    png: canvas.toDataURL(),
-    svg: svgDataUrl(createSvg([1000, ...points], 300, 'greenyellow')) // cropperでのプレビュー用
+    dataUrl: {
+      png: canvas.toDataURL(),
+      svg: svgDataUrl(createSvg([1000, ...points], 300, 'greenyellow')) // cropperでのプレビュー用
+    }
   }
 }

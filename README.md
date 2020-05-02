@@ -1,6 +1,6 @@
 # mc-nuggets-classifier
 
-4種類の形状 (BELL, BOOT, BALL, BONE) があるらしい。
+4種類の形状 (BELL, BOOT, BALL, BONE) があるらしい。 <br>
 https://twitter.com/McDonalds/status/556192167472136195
 
 ```

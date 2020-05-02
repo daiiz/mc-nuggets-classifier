@@ -18,6 +18,13 @@
     <!-- OpenCVで使う -->
     <canvas id='out'></canvas>
     <div id='crop'>
+      <div id='model-selector-container'>
+        <select id='model-selector'>
+          <option value='rgb'>RGB</option>
+          <option value='bin'>Binarized</option>
+          <option value='contour'>Contour</option>
+        </select>
+      </div>
       <div id='label'></div>
     </div>
     <script src='./js/utils.js'></script>

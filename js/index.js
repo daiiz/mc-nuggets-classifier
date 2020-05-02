@@ -35,12 +35,9 @@ const getMostLikelyItem = predictions => {
   return max
 }
 
-const predict = async () => {
-  if (!model) {
-    return showLabel('The model is not ready.')
-  }
+const predict = async (inputImg) => {
+  if (!model) return showLabel('The model is not ready.')
 
-  let inputImg = await cropCanvas()
   // モデルにあわせて入力画像を加工
   switch (model.modelName) {
     case 'rgb': {
@@ -60,7 +57,6 @@ const predict = async () => {
       break
     }
   }
-
   // https://www.npmjs.com/package/@tensorflow/tfjs-automl#image-classification
   const predictions = await model.classify(inputImg, { centerCrop: false })
   return getMostLikelyItem(predictions)
@@ -84,7 +80,7 @@ const initCropper = () => {
     if (cropper.className) return
     cropper.className = 'running'
     hideLabel()
-    const res = await predict()
+    const res = await predict(await cropCanvas())
     cropper.className = ''
     showLabel(`${res.label} ${Math.round(res.prob * 100) / 100}`)
   }, false)
@@ -95,6 +91,10 @@ const initModelSelector = () => {
   selector.addEventListener('change', async e => {
     await loadModel(e.target.value)
   }, false)
+  const randomImageButton = document.getElementById('model-selector-rand-image')
+  randomImageButton?.addEventListener('click', async e => {
+    await predictRandomImage()
+  })
 }
 
 let offset = 0
@@ -161,7 +161,16 @@ window.addEventListener('load', async () => {
   renderCameraStream()
   await loadModel(modelNames[0])
   initModelSelector()
-  // await convertToBin('./images/samples/a.jpg')
-  // const { png, svg } = await extractContour('./images/samples/a.jpg')
-  // previewImage(svg)
 })
+
+const predictRandomImage = async () => {
+  const arr = [
+    './images/samples/s0.jpg',
+    './images/samples/s1.jpg',
+    './images/samples/s2.jpg',
+    './images/samples/s3.jpg',
+  ]
+  const idx = Math.floor(Math.random() * arr.length)
+  const res = await predict(await genImg(arr[idx]))
+  showLabel(`${res.label} ${Math.round(res.prob * 100) / 100}`)
+}

@@ -1,7 +1,9 @@
+let previewTimer = null
 const previewImage = srcUrl => {
+  if (previewTimer) clearTimeout(previewTimer)
   const cropper = document.getElementById('crop')
   cropper.style.backgroundImage = `url(${srcUrl})`
-  window.setTimeout(() => {
+  previewTimer = setTimeout(() => {
     cropper.style.backgroundImage = ''
   }, 4000)
 }
@@ -37,4 +39,10 @@ const showLabel = text => {
 const hideLabel = () => {
   const label = document.getElementById('label')
   label.style.display = 'none'
+}
+
+const delay = ms => {
+  return new Promise((resolve, reject) => {
+    window.setTimeout(() => { resolve(ms) }, ms)
+  })
 }
